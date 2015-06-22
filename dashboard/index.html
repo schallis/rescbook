@@ -1,0 +1,165 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RescBook Dashboard</title>
+  <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="dashboard"></div>
+</footer>
+</footer>
+</body>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="bower_components/react/react-with-addons.js"></script>
+<script src="bower_components/react-bootstrap/react-bootstrap.min.js"></script>
+<script src="bower_components/react/JSXTransformer.js"></script>
+<script type="text/jsx">
+    const PageHeader = ReactBootstrap.PageHeader;
+    const Label = ReactBootstrap.Label;
+    const Panel = ReactBootstrap.Panel;
+    const Grid = ReactBootstrap.Grid;
+    const Row = ReactBootstrap.Row;
+    const Col = ReactBootstrap.Col;
+    const NavItem = ReactBootstrap.NavItem;
+    const Nav = ReactBootstrap.Nav;
+    const MenuItem = ReactBootstrap.MenuItem;
+    const ButtonToolbar = ReactBootstrap.ButtonToolbar;
+    const DropdownButton = ReactBootstrap.DropdownButton;
+    const IncidentPanel = React.createClass({
+      render: function() {
+        if (this.props.selected == null) {
+          return <Panel><span>No item selected</span></Panel>
+        }
+        else {
+          var incident = this.props.selected.props.incident;
+          var title = 'Incident #' + incident.num;
+          return <Panel header={<h2>{title} <Label>{incident.status}</Label></h2>} id="incident-panel">
+          <h4>{incident.type}</h4>
+          <span>{incident.datetime}</span>
+          </Panel>
+        }
+      }
+    });
+    const Incident = React.createClass({
+      handleClick: function() {
+        this.props.selectIncident(this);
+      },
+      render: function() {
+        var selected = this.props.isSelected;
+        return (<NavItem
+          onClick={this.handleClick}
+          className={selected ? "selected" : ""}>
+        <h3>#{this.props.num} <Label>{this.props.incident.status}</Label></h3>
+        <h4 class="type">{this.props.incident.type}</h4>
+        <span class="datetime">{this.props.incident.datetime}</span>
+        </NavItem>)
+      }
+    });
+    const IncidentList = React.createClass({
+      getInitialState: function() {
+        return {
+          'selectedIncident': null
+        }
+      },
+      selectIncident: function(incident) {
+        this.setState({
+          selectedIncident: incident
+        });
+      },
+      render: function() {
+        var selectedKey = (this.state.selectedIncident && this.state.selectedIncident.props.num) || null;
+		    var children = this.props.children.map(function(incident, i) {
+          var isSelected = incident.props.num === selectedKey;
+          return React.addons.cloneWithProps(incident, {
+            isSelected: isSelected,
+            selectIncident: this.selectIncident,
+            num: incident.props.num
+          });
+        }, this);
+        return (
+          <div>
+          <Grid>
+          <Row>
+          <Col md={4}>
+          <Nav bsStyle='pills' stacked id="incident-list">
+            {children}
+          </Nav>
+          </Col>
+          <Col md={8}>
+          <IncidentPanel selected={this.state.selectedIncident} />
+          </Col>
+          </Row>
+          </Grid>
+          </div>
+        )
+      }
+    });
+    const Dashboard = React.createClass({
+      createIncident: function(incident) {
+        return <Incident incident={incident} num={incident.num}  />
+      },
+      addIncident: function(incident) {
+        var newState = this.state;
+        newState.incidents.unshift(incident);
+        this.setState(newState);
+      },
+      getInitialState: function() {
+        /* incidents should be in reverse chronological */
+        return {
+          'incidents': [
+            {
+              'num': 2,
+              'type': 'Fire',
+              'datetime': '2015-06-22T21:02:36.845Z',
+              'status': 'Urgent'
+            },
+            {
+              'num': 1,
+              'type': 'Medical',
+              'datetime': '2015-06-22T21:01:36.845Z',
+              'status': 'Deployed'
+            }],
+          'selectedIncident': null
+        }
+      },
+      selectIncident: function(incident) {
+        this.setState({
+            selectedIncident: incident
+        });
+      },
+      componentDidMount: function() {
+        var self = this;
+        var socket = new io("http://localhost:3000");
+        socket.on('newIncident', function(data) {
+          self.addIncident(data)
+        })
+      },
+      render: function() {
+        return <div id="dashboard">
+        <PageHeader>
+          <h1>RescBook</h1>
+          <span class="datetime">12:04 EST</span>
+          <span class="user">Steven Challis</span>
+          <ButtonToolbar>
+            <DropdownButton bsStyle='primary' title='Show'>
+             <MenuItem eventKey='1'>Everyone</MenuItem>
+             <MenuItem divider />
+             <MenuItem eventKey='2'>Reporter</MenuItem>
+             <MenuItem eventKey='3'>First Responders</MenuItem>
+             <MenuItem eventKey='4'>Nearby Citizens</MenuItem>
+            </DropdownButton>
+          </ButtonToolbar>
+        </PageHeader>
+        <IncidentList>
+          {this.state.incidents.map(this.createIncident)}
+        </IncidentList>
+        </div>
+      }
+    });
+    React.render(
+      <Dashboard/>,
+      document.getElementById('dashboard')
+    );
+</script>
+</html>
