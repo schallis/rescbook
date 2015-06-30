@@ -1,0 +1,4 @@
+Running
+=======
+
+node server && watchify -v --poll -t reactify client.js -o dist.js
