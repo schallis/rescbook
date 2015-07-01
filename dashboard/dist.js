@@ -196,9 +196,9 @@ const Dashboard = React.createClass({displayName: "Dashboard",
   },
   componentDidMount: function() {
     var self = this;
-    var socket = new SocketIO("http://localhost:3000");
+    var socket = new SocketIO(document.location.protocol+'//'+document.location.host);
     socket.on('newIncident', function(data) {
-      // self.addIncident(data)
+      self.addIncident(data)
     })
   },
   render: function() {
