@@ -1,7 +1,8 @@
-var React = require('react/addons')
-var Bootstrap = require('react-bootstrap')
-var SocketIO = require('socket.io-client')
-var MapComponent = require('./mapbox.jsx')
+var React = require('react/addons');
+var Bootstrap = require('react-bootstrap');
+var SocketIO = require('socket.io-client');
+var MapComponent = require('./mapbox.jsx');
+var moment = require('moment');
 
 const PageHeader = Bootstrap.PageHeader;
 const Label = Bootstrap.Label;
@@ -79,7 +80,7 @@ const Incident = React.createClass({
       className={selected ? "selected" : ""}>
     <h3>#{this.props.num} <Label>{this.props.incident.status}</Label></h3>
     <h4 class="type">{this.props.incident.type}</h4>
-    <span class="datetime">{this.props.incident.datetime}</span>
+    <span class="datetime">{moment(this.props.incident.datetime).fromNow()}</span>
     </NavItem>)
   }
 });

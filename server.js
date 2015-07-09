@@ -1,13 +1,15 @@
 var express = require('express');
 var http = require('http');
 var socketio = require('socket.io');
-var io = socketio(http);
 var app = express();
 var server = http.Server(app);
+var io = socketio(server);
 
 app.get('/', function(req, res){
   res.sendfile('./index.html');
 });
+
+app.use(express.static('.'));
 
 var types = [
   'Fire',
