@@ -17,21 +17,28 @@ var types = [
   'Police'
 ]
 
-function sendNewIncident(socket, num) {
-  socket.emit('newIncident', {
+var num = 3
+
+function sendNewIncident() {
+  /* Broadcast new incident to all clients */
+  io.emit('newIncident', {
     'type': types[Math.floor(Math.random()*types.length)],
     'status': 'Pending',
     'datetime': new Date().toISOString(),
     'num': num
   });
+  num = num + 1
   console.log('sending new incident...');
 };
 
 io.on('connection', function(socket){
+  socket.on('incident', function (data) {
+    console.log('received a new incident');
+    console.log(data);
+    sendNewIncident();
+  });
   console.log('a user connected');
-  setTimeout(function() {sendNewIncident(socket, 3)}, 3000);
-  setTimeout(function() {sendNewIncident(socket, 4)}, 8000);
-  setTimeout(function() {sendNewIncident(socket, 5)}, 15000);
+  // setTimeout(function() {sendNewIncident(socket, 3)}, 3000);
 });
 
 var port = process.env.PORT || 3000;
