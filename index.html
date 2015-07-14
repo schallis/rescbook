@@ -5,6 +5,7 @@
   <title>RescBook Dashboard</title>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <script src='https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
   <style>
@@ -23,8 +24,36 @@
     /*background-image: linear-gradient(90deg, #a16eff 0%, #3dcebb 100%);*/
     background-image: linear-gradient(90deg, #F0586A 0%, #E9BB79 100%);
   }
+  .map-detail {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 7;
+  }
   .selected {color: red;}
-  #map { width:100%; height: 300px;}
+  #map {
+    width:100%;
+    height: 300px;
+    margin-bottom: 20px;
+    background: #73b6e6;
+  }
+  .navbar {
+    margin-bottom: 0;
+  }
+  header {
+    background: #eeeeee;
+    border-bottom: 1px solid #ddd;
+    height: 50px;
+  }
+  .incident-container {
+    display: flex;
+  }
+  .incident-nav {
+    width: 400px;
+  }
+  .incident-panel {
+    flex: 1;
+  }
   </style>
 </head>
 <body>

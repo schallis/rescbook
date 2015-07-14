@@ -35,50 +35,74 @@ const DropdownButton = Bootstrap.DropdownButton;
 const Thumbnail = Bootstrap.Thumbnail;
 const ButtonInput = Bootstrap.ButtonInput;
 const Input = Bootstrap.Input;
+const Button = Bootstrap.Button;
 const FormControls = Bootstrap.FormControls;
+const TabbedArea = Bootstrap.TabbedArea;
+const TabPane = Bootstrap.TabPane;
+const Glyphicon = Bootstrap.Glyphicon;
 
 const IncidentPanel = React.createClass({displayName: "IncidentPanel",
   render: function() {
     if (this.props.selected == null) {
-      return React.createElement(Panel, {bsStyle: "info", header: "No item selected"}, React.createElement("span", null, "Select an incident from the left"))
+      return React.createElement("div", {className: "incident-panel"}, React.createElement(Panel, {bsStyle: "info", header: "No item selected"}, React.createElement("span", null, "Select an incident from the left")))
     }
     else {
       var incident = this.props.selected.props.incident;
       var title = 'Incident #' + incident.num;
-      return React.createElement(Panel, {id: "incident-panel"}, 
+      const saveInnerButton = React.createElement(Button, null, "Save");
+      return React.createElement("div", {className: "incident-panel"}, 
         React.createElement(MapComponent, {
           mapId: "schallis.f1d44938", 
-          accessToken: "pk.eyJ1Ijoic2NoYWxsaXMiLCJhIjoiYjQwNWVmNjVkOWZlMjE0MWE0OTY1ZWE2NzEyNjAwMzQifQ.h96lOzy4V0a8bEpUd3EC2Q"}), 
-        React.createElement(Grid, {fluid: true}, 
-          React.createElement(Row, null, 
-            React.createElement(Col, {md: 4}, 
-              React.createElement("h3", null, "Incident Information"), 
-                React.createElement("form", {className: "form-horizontal"}, 
-                  React.createElement(FormControls.Static, {label: "Number", labelClassName: "col-xs-2", wrapperClassName: "col-xs-10"}, incident.label), 
-                  React.createElement(FormControls.Static, {label: "Status", labelClassName: "col-xs-2", wrapperClassName: "col-xs-10"}, incident.status), 
-                  React.createElement(FormControls.Static, {label: "Type", labelClassName: "col-xs-2", wrapperClassName: "col-xs-10"}, incident.type), 
-                  React.createElement(FormControls.Static, {label: "Time", labelClassName: "col-xs-2", wrapperClassName: "col-xs-10"}, incident.datetime), 
-                  React.createElement(FormControls.Static, {label: "People", labelClassName: "col-xs-2", wrapperClassName: "col-xs-10"}, "2")
-                )
+          accessToken: "pk.eyJ1Ijoic2NoYWxsaXMiLCJhIjoiYjQwNWVmNjVkOWZlMjE0MWE0OTY1ZWE2NzEyNjAwMzQifQ.h96lOzy4V0a8bEpUd3EC2Q", 
+          latitude: incident.location.latitude, 
+          longitude: incident.location.longitude}, 
+          React.createElement(DropdownButton, {pullRight: true, className: "map-detail", eventKey: 3, title: React.createElement("span", null, React.createElement(Glyphicon, {glyph: "map-marker"}), " Viewing All")}, 
+            React.createElement(MenuItem, {eventKey: "1"}, React.createElement("span", {className: "fa fa-fw"}), " First Responders"), 
+            React.createElement(MenuItem, {eventKey: "2"}, React.createElement("span", {className: "fa fa-fw"}), " Nearby Citizens"), 
+            React.createElement(MenuItem, {active: true, eventKey: "2"}, React.createElement("span", {className: "fa fa-fw fa-check"}), " All")
+          )
+        ), 
+        React.createElement(TabbedArea, {defaultActiveKey: 1}, 
+          React.createElement(TabPane, {eventKey: 1, tab: "Information"}, 
+              React.createElement("h3", null, "Basic Information"), 
+                React.createElement("form", {className: "form"}, 
+                  React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Number"}, incident.label), 
+                  React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Location"}, incident.location.latitude, ", ", incident.location.longitude), 
+                  React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Status"}, incident.status), 
+                  React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Time"}, incident.datetime)
+                ), 
+                React.createElement("h3", null, "Incident Questions"), 
+                  React.createElement("form", {className: "form"}, 
+                    React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Type"}, incident.type), 
+                    React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "People"}, "2"), 
+                    React.createElement(Input, {type: "text", placeholder: "Enter floor", bsStyle: "error", label: "Floor", buttonAfter: saveInnerButton})
+                  ), 
+                React.createElement("h3", null, "Personal Information"), 
+                  React.createElement("form", {className: "form"}, 
+                    React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Medical Conditions"}, incident.personal.conditions), 
+                    React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Allergies & Reactions"}, incident.personal.allergies), 
+                    React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Medications"}, incident.personal.medications), 
+                    React.createElement(FormControls.Static, {bsStyle: "success", hasFeedback: true, label: "Blood Type"}, incident.personal.blood), 
+                    React.createElement(FormControls.Static, {bsStyle: "warning", hasFeedback: true, label: "Contacts"}, incident.personal.contacts)
+                  )
             ), 
-            React.createElement(Col, {md: 4}, 
-              React.createElement("h3", null, "Communications"), 
-              React.createElement("p", null, React.createElement("strong", null, "@schallis"), " I can smell smoke on the corner of 48th"), 
-              React.createElement("p", null, React.createElement("strong", null, "@jappleseed"), " Flames on the 3rd floor"), 
+            React.createElement(TabPane, {eventKey: 2, tab: "Communications"}, 
+              React.createElement("h3", null, "Chat"), 
+              React.createElement("p", null, React.createElement("strong", null, "12:01 @schallis"), " I can smell smoke on the corner of 48th"), 
+              React.createElement("p", null, React.createElement("strong", null, "12:00 @jappleseed"), " Flames on the 3rd floor"), 
               React.createElement("form", null, 
                 React.createElement(Input, {type: "textarea", placeholder: "Type your message..."}), 
                 React.createElement(ButtonInput, {value: "Send"}), 
                 React.createElement(Input, {type: "checkbox", label: "Private"})
               )
             ), 
-            React.createElement(Col, {md: 4}, 
-              React.createElement("h3", null, "Media"), 
+            React.createElement(TabPane, {eventKey: 3, tab: "Media"}, 
+              React.createElement("h3", null, "Pictures"), 
               React.createElement(Thumbnail, {src: "http://placehold.it/150x150"}, React.createElement("p", null, "Description")), 
               React.createElement(Thumbnail, {src: "http://placehold.it/150x150"}, React.createElement("p", null, "Description")), 
               React.createElement(Thumbnail, {src: "http://placehold.it/150x150"}, React.createElement("p", null, "Description"))
             )
-          )
-        )
+            )
       )
     }
   }
@@ -140,23 +164,17 @@ const IncidentComponent = React.createClass({displayName: "IncidentComponent",
           )
         )
       ), 
-      React.createElement(Grid, {fluid: true}, 
-      React.createElement(Row, null, 
-      React.createElement(Col, {md: 12}
-
-      )
-      ), 
-      React.createElement(Row, null, 
-      React.createElement(Col, {md: 3}, 
-      React.createElement(Nav, {bsStyle: "pills", stacked: true, id: "incident-list"}, 
-        children
-      )
-      ), 
-      React.createElement(Col, {md: 9}, 
-      React.createElement(IncidentPanel, {selected: this.state.selectedIncident})
-      )
-      )
-      )
+        React.createElement("section", {className: "incident-container"}, 
+          React.createElement("div", {className: "incident-nav"}, 
+            React.createElement("header", null, 
+              React.createElement(Input, {type: "search", placeholder: "Search incidents"})
+            ), 
+            React.createElement(Nav, {bsStyle: "pills", stacked: true, id: "incident-list"}, 
+              children
+            )
+          ), 
+          React.createElement(IncidentPanel, {selected: this.state.selectedIncident})
+        )
       )
     )
   }
@@ -179,13 +197,35 @@ const Dashboard = React.createClass({displayName: "Dashboard",
           'num': 2,
           'type': 'Fire',
           'datetime': '2015-06-22T21:02:36.845Z',
-          'status': 'Urgent'
+          'status': 'Urgent',
+          'location': {
+            'longitude': -75,
+            'latitude': 40,
+          },
+          'personal': {
+            'conditions': "Epilepsy",
+            'allergies': "Penicillin",
+            'medications': "Levitiracetam 1000mg",
+            'blood': "AB +",
+            'partner': "Taylor Swift +1 (347) 302 3735",
+          }
         },
         {
           'num': 1,
           'type': 'Medical',
           'datetime': '2015-06-22T21:01:36.845Z',
-          'status': 'Deployed'
+          'status': 'Deployed',
+          'location': {
+            'longitude': -73.950,
+            'latitude': 40.744,
+          },
+          'personal': {
+            'conditions': "None",
+            'allergies': "None",
+            'medications': "None",
+            'blood': "O -",
+            'partner': "Bill +1 (347) 302 3735",
+          }
         }],
       'selectedIncident': null
     }
@@ -220,27 +260,52 @@ module.exports = Dashboard
 var React = require('react');
 
 var MapComponent = (function () {
+  var map;
   return React.createClass({
-
     propTypes: {
       accessToken: React.PropTypes.string.isRequired,
       mapId: React.PropTypes.string.isRequired,
+      latitude: React.PropTypes.number.isRequired,
+      longitude: React.PropTypes.number.isRequired
     },
+
+
 
     componentDidMount: function () {
       // Provide your access token
       L.mapbox.accessToken = this.props.accessToken;
 
       // Create a map in the div #map
-      var map = L.mapbox.map('map', this.props.mapId);
-      map.setZoom(14)
+      this.map = L.mapbox.map('map', this.props.mapId);
+      this.setMapLocation(this.props);
+      // map.fitBounds(40.745953,-73.955555);
+      // map.setZoom(14);
+      // var geocoder = L.mapbox.geocoder('mapbox.places');
+      // geocoder.query('4545 Center Blvd, Long Island City, NJ', showMap);
+      // function showMap(err, data) {
+      //   if (data.lbounds) {
+      //     alert(data.latlng);
+      //     map.fitBounds(data.lbounds);
+      //   } else if (data.latlng) {
+      //     alert(data.latlng);
+      //     map.setView([data.latlng[0], data.latlng[1]], 13);
+      //   }
+      // }
+      //map.setZoom(14);
     },
-
     // Called on initialization and after each change to the components
     // props or state
+    componentWillUpdate(nextProps, nextState) {
+      this.setMapLocation(nextProps);
+    },
+    setMapLocation(props) {
+      this.map.setView([props.latitude, props.longitude], 14);
+    },
     render: function () {
       return (
-        React.createElement("div", {id: "map"})
+        React.createElement("div", {id: "map"}, 
+          this.props.children
+        )
       )
     }
   });

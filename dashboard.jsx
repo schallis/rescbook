@@ -20,51 +20,75 @@ const DropdownButton = Bootstrap.DropdownButton;
 const Thumbnail = Bootstrap.Thumbnail;
 const ButtonInput = Bootstrap.ButtonInput;
 const Input = Bootstrap.Input;
+const Button = Bootstrap.Button;
 const FormControls = Bootstrap.FormControls;
+const TabbedArea = Bootstrap.TabbedArea;
+const TabPane = Bootstrap.TabPane;
+const Glyphicon = Bootstrap.Glyphicon;
 
 const IncidentPanel = React.createClass({
   render: function() {
     if (this.props.selected == null) {
-      return <Panel bsStyle='info' header='No item selected'><span>Select an incident from the left</span></Panel>
+      return <div className="incident-panel"><Panel bsStyle='info' header='No item selected'><span>Select an incident from the left</span></Panel></div>
     }
     else {
       var incident = this.props.selected.props.incident;
       var title = 'Incident #' + incident.num;
-      return <Panel id="incident-panel">
+      const saveInnerButton = <Button>Save</Button>;
+      return <div className="incident-panel">
         <MapComponent
           mapId='schallis.f1d44938'
-          accessToken='pk.eyJ1Ijoic2NoYWxsaXMiLCJhIjoiYjQwNWVmNjVkOWZlMjE0MWE0OTY1ZWE2NzEyNjAwMzQifQ.h96lOzy4V0a8bEpUd3EC2Q' />
-        <Grid fluid>
-          <Row>
-            <Col md={4}>
-              <h3>Incident Information</h3>
-                <form className="form-horizontal">
-                  <FormControls.Static label="Number" labelClassName="col-xs-2" wrapperClassName="col-xs-10">{incident.label}</FormControls.Static>
-                  <FormControls.Static label="Status" labelClassName="col-xs-2" wrapperClassName="col-xs-10">{incident.status}</FormControls.Static>
-                  <FormControls.Static label="Type" labelClassName="col-xs-2" wrapperClassName="col-xs-10">{incident.type}</FormControls.Static>
-                  <FormControls.Static label="Time" labelClassName="col-xs-2" wrapperClassName="col-xs-10">{incident.datetime}</FormControls.Static>
-                  <FormControls.Static label="People" labelClassName="col-xs-2" wrapperClassName="col-xs-10">2</FormControls.Static>
+          accessToken='pk.eyJ1Ijoic2NoYWxsaXMiLCJhIjoiYjQwNWVmNjVkOWZlMjE0MWE0OTY1ZWE2NzEyNjAwMzQifQ.h96lOzy4V0a8bEpUd3EC2Q'
+          latitude={incident.location.latitude}
+          longitude={incident.location.longitude}>
+          <DropdownButton pullRight className="map-detail" eventKey={3} title={<span><Glyphicon glyph='map-marker' /> Viewing All</span>}>
+            <MenuItem eventKey='1'><span className="fa fa-fw"/> First Responders</MenuItem>
+            <MenuItem eventKey='2'><span className="fa fa-fw"/> Nearby Citizens</MenuItem>
+            <MenuItem active eventKey='2'><span className="fa fa-fw fa-check"/> All</MenuItem>
+          </DropdownButton>
+        </MapComponent>
+        <TabbedArea defaultActiveKey={1}>
+          <TabPane eventKey={1} tab='Information'>
+              <h3>Basic Information</h3>
+                <form className="form">
+                  <FormControls.Static  bsStyle="success" hasFeedback label="Number">{incident.label}</FormControls.Static>
+                  <FormControls.Static  bsStyle="success" hasFeedback label="Location">{incident.location.latitude}, {incident.location.longitude}</FormControls.Static>
+                  <FormControls.Static  bsStyle="success" hasFeedback label="Status">{incident.status}</FormControls.Static>
+                  <FormControls.Static  bsStyle="success" hasFeedback label="Time">{incident.datetime}</FormControls.Static>
                 </form>
-            </Col>
-            <Col md={4}>
-              <h3>Communications</h3>
-              <p><strong>@schallis</strong> I can smell smoke on the corner of 48th</p>
-              <p><strong>@jappleseed</strong> Flames on the 3rd floor</p>
+                <h3>Incident Questions</h3>
+                  <form className="form">
+                    <FormControls.Static bsStyle="success" hasFeedback label="Type">{incident.type}</FormControls.Static>
+                    <FormControls.Static bsStyle="success" hasFeedback label="People">2</FormControls.Static>
+                    <Input type='text' placeholder='Enter floor' bsStyle="error" label="Floor" buttonAfter={saveInnerButton}></Input>
+                  </form>
+                <h3>Personal Information</h3>
+                  <form className="form">
+                    <FormControls.Static bsStyle="success" hasFeedback label="Medical Conditions" >{incident.personal.conditions}</FormControls.Static>
+                    <FormControls.Static bsStyle="success" hasFeedback label="Allergies &amp; Reactions" >{incident.personal.allergies}</FormControls.Static>
+                    <FormControls.Static bsStyle="success" hasFeedback label="Medications" >{incident.personal.medications}</FormControls.Static>
+                    <FormControls.Static bsStyle="success" hasFeedback label="Blood Type" >{incident.personal.blood}</FormControls.Static>
+                    <FormControls.Static bsStyle="warning" hasFeedback label="Contacts" >{incident.personal.contacts}</FormControls.Static>
+                  </form>
+            </TabPane>
+            <TabPane eventKey={2} tab='Communications'>
+              <h3>Chat</h3>
+              <p><strong>12:01 @schallis</strong> I can smell smoke on the corner of 48th</p>
+              <p><strong>12:00 @jappleseed</strong> Flames on the 3rd floor</p>
               <form>
                 <Input type='textarea' placeholder='Type your message...' />
                 <ButtonInput value='Send' />
                 <Input type='checkbox' label='Private' />
               </form>
-            </Col>
-            <Col md={4}>
-              <h3>Media</h3>
+            </TabPane>
+            <TabPane eventKey={3} tab='Media'>
+              <h3>Pictures</h3>
               <Thumbnail src="http://placehold.it/150x150"><p>Description</p></Thumbnail>
               <Thumbnail src="http://placehold.it/150x150"><p>Description</p></Thumbnail>
               <Thumbnail src="http://placehold.it/150x150"><p>Description</p></Thumbnail>
-            </Col>
-          </Row>
-        </Grid>
-      </Panel>
+            </TabPane>
+            </TabbedArea>
+      </div>
     }
   }
 });
@@ -125,23 +149,17 @@ const IncidentComponent = React.createClass({
           </Nav>
         </CollapsibleNav>
       </Navbar>
-      <Grid fluid>
-      <Row>
-      <Col md={12}>
-
-      </Col>
-      </Row>
-      <Row>
-      <Col md={3}>
-      <Nav bsStyle='pills' stacked id="incident-list">
-        {children}
-      </Nav>
-      </Col>
-      <Col md={9}>
-      <IncidentPanel selected={this.state.selectedIncident} />
-      </Col>
-      </Row>
-      </Grid>
+        <section className="incident-container">
+          <div className="incident-nav">
+            <header>
+              <Input type="search" placeholder='Search incidents' />
+            </header>
+            <Nav bsStyle='pills' stacked id="incident-list">
+              {children}
+            </Nav>
+          </div>
+          <IncidentPanel selected={this.state.selectedIncident} />
+        </section>
       </div>
     )
   }
@@ -164,13 +182,35 @@ const Dashboard = React.createClass({
           'num': 2,
           'type': 'Fire',
           'datetime': '2015-06-22T21:02:36.845Z',
-          'status': 'Urgent'
+          'status': 'Urgent',
+          'location': {
+            'longitude': -75,
+            'latitude': 40,
+          },
+          'personal': {
+            'conditions': "Epilepsy",
+            'allergies': "Penicillin",
+            'medications': "Levitiracetam 1000mg",
+            'blood': "AB +",
+            'partner': "Taylor Swift +1 (347) 302 3735",
+          }
         },
         {
           'num': 1,
           'type': 'Medical',
           'datetime': '2015-06-22T21:01:36.845Z',
-          'status': 'Deployed'
+          'status': 'Deployed',
+          'location': {
+            'longitude': -73.950,
+            'latitude': 40.744,
+          },
+          'personal': {
+            'conditions': "None",
+            'allergies': "None",
+            'medications': "None",
+            'blood': "O -",
+            'partner': "Bill +1 (347) 302 3735",
+          }
         }],
       'selectedIncident': null
     }
