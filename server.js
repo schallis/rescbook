@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var express = require('express');
 var http = require('http');
 var socketio = require('socket.io');
@@ -19,23 +20,24 @@ var types = [
 
 var num = 3
 
-function sendNewIncident() {
+function sendNewIncident(data) {
   /* Broadcast new incident to all clients */
-  io.emit('newIncident', {
+  newData = _.extend({
     'type': types[Math.floor(Math.random()*types.length)],
     'status': 'Pending',
     'datetime': new Date().toISOString(),
     'num': num
-  });
+  }, data)
+  io.emit('newIncident', newData);
   num = num + 1
   console.log('sending new incident...');
+  console.log(newData);
 };
 
 io.on('connection', function(socket){
   socket.on('incident', function (data) {
     console.log('received a new incident');
-    console.log(data);
-    sendNewIncident();
+    sendNewIncident(data);
   });
   console.log('a user connected');
   // setTimeout(function() {sendNewIncident(socket, 3)}, 3000);

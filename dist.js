@@ -98,9 +98,9 @@ const IncidentPanel = React.createClass({displayName: "IncidentPanel",
             ), 
             React.createElement(TabPane, {eventKey: 3, tab: "Media"}, 
               React.createElement("h3", null, "Pictures"), 
-              React.createElement(Thumbnail, {src: "http://placehold.it/150x150"}, React.createElement("p", null, "Description")), 
-              React.createElement(Thumbnail, {src: "http://placehold.it/150x150"}, React.createElement("p", null, "Description")), 
-              React.createElement(Thumbnail, {src: "http://placehold.it/150x150"}, React.createElement("p", null, "Description"))
+              React.createElement(Thumbnail, {src: "https://placehold.it/150x150"}, React.createElement("p", null, "Description")), 
+              React.createElement(Thumbnail, {src: "https://placehold.it/150x150"}, React.createElement("p", null, "Description")), 
+              React.createElement(Thumbnail, {src: "https://placehold.it/150x150"}, React.createElement("p", null, "Description"))
             )
             )
       )

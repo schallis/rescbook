@@ -83,9 +83,9 @@ const IncidentPanel = React.createClass({
             </TabPane>
             <TabPane eventKey={3} tab='Media'>
               <h3>Pictures</h3>
-              <Thumbnail src="http://placehold.it/150x150"><p>Description</p></Thumbnail>
-              <Thumbnail src="http://placehold.it/150x150"><p>Description</p></Thumbnail>
-              <Thumbnail src="http://placehold.it/150x150"><p>Description</p></Thumbnail>
+              <Thumbnail src="https://placehold.it/150x150"><p>Description</p></Thumbnail>
+              <Thumbnail src="https://placehold.it/150x150"><p>Description</p></Thumbnail>
+              <Thumbnail src="https://placehold.it/150x150"><p>Description</p></Thumbnail>
             </TabPane>
             </TabbedArea>
       </div>
