@@ -1,3 +1,9 @@
+About
+=====
+Rescbook is a prototype emergency services dashboard with accompanying Phone
+app. Incidents can be raised in realtime via the app and send information not
+normally available by phone (e.g. GPS location, photos, emergency contacts)
+
 Running
 =======
 
